@@ -1,42 +1,48 @@
 //your JS code here. If required.
-// script.js
+const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberCheckbox = document.getElementById('checkbox');
+    const submitButton = document.getElementById('submit');
+    const existingButton = document.createElement('button');
+    existingButton.textContent = 'Login as existing user';
+    existingButton.id = 'existing';
+    existingButton.style.visibility = 'hidden';
+	
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Check if there are saved details
-    if (localStorage.getItem('rememberedUser')) {
-        // Show the "Login as existing user" button
-        var existingUserButton = document.createElement('button');
-        existingUserButton.setAttribute('id', 'existing');
-        existingUserButton.textContent = 'Login as existing user';
-
-        // Append the button to the form
-        document.getElementById('loginForm').appendChild(existingUserButton);
-
-        existingUserButton.addEventListener('click', function () {
-            // Retrieve and display the saved username
-            var savedUsername = localStorage.getItem('rememberedUser');
-            alert('Logged in as ' + savedUsername);
-        });
+    // Check if saved user details exist in localStorage
+    if (localStorage.getItem('username') && localStorage.getItem('password')) {
+      existingButton.style.visibility = 'visible';
     }
 
-    // Add event listener to the login form
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting normally
+    document.body.appendChild(existingButton);
 
-        var username = document.getElementById('username').value;
-        var password = document.getElementById('password').value;
-        var rememberCheckbox = document.getElementById('checkbox');
+    // Event listener for the form submission
+    loginForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const username = usernameInput.value;
+      const password = passwordInput.value;
 
-        // Save details to local storage if the checkbox is checked
-        if (rememberCheckbox.checked) {
-            localStorage.setItem('rememberedUser', username);
-            localStorage.setItem('rememberedPassword', password);
-        } else {
-            // Remove stored details if the checkbox is not checked
-            localStorage.removeItem('rememberedUser');
-            localStorage.removeItem('rememberedPassword');
-        }
-        alert('Logged in as ' + username);
+      if (rememberCheckbox.checked) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+      } else {
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+		existingButton.style.visibility = 'hidden';
+      }
+
+      alert(`Logged in as ${username}`);
+
+      // If there are saved details, show existing button
+      if (localStorage.getItem('username') && localStorage.getItem('password')) {
+        existingButton.style.visibility = 'visible';
+      }
     });
-});
-	
+
+    // Event listener for the "Login as existing user" button
+    existingButton.addEventListener('click', function() {
+      const savedUsername = localStorage.getItem('username');
+      alert(`Logged in as ${savedUsername}`);
+		
+    });
